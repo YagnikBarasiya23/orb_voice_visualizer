@@ -4,6 +4,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:orb_voice_visualizer/orb_voice_visualizer.dart';
 
+import 'controls.dart';
+
 void main() => runApp(const OrbDemo());
 
 const _bg = Color(0xFF050505);
@@ -43,6 +45,12 @@ class _DemoPageState extends State<DemoPage> with SingleTickerProviderStateMixin
     'Sunset': OrbColors.all(Color(0xFFFF5F6D), Color(0xFFFFC371)),
     'Mint': OrbColors.all(Color(0xFF2FD3A7), Color(0xFF4C8DFF)),
     'Mono': OrbColors.all(Color(0xFFD4D4D8), Color(0xFF52525B)),
+  };
+  static const _swatches = <String, List<Color>>{
+    'Per state': [Color(0xFF4C8DFF), Color(0xFF2FD3A7), Color(0xFFFF5FA2), Color(0xFFFFB347)],
+    'Sunset': [Color(0xFFFF5F6D), Color(0xFFFFC371)],
+    'Mint': [Color(0xFF2FD3A7), Color(0xFF4C8DFF)],
+    'Mono': [Color(0xFFD4D4D8), Color(0xFF52525B)],
   };
   static const _lines = {
     OrbState.listening: 'You: “Plan a post for Saturday.”',
@@ -107,9 +115,10 @@ class _DemoPageState extends State<DemoPage> with SingleTickerProviderStateMixin
     final text = Theme.of(context).textTheme;
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 28, 20, 40),
+            padding: EdgeInsets.fromLTRB(20, 28, 20, 40 + MediaQuery.paddingOf(context).bottom),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 560),
               child: Column(
@@ -141,45 +150,42 @@ class _DemoPageState extends State<DemoPage> with SingleTickerProviderStateMixin
                           child: Text(_caption, style: text.bodyMedium?.copyWith(color: _muted)),
                         ),
                         const SizedBox(height: 16),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          alignment: WrapAlignment.center,
-                          children: [
-                            for (final state in OrbState.values)
-                              ChoiceChip(
-                                label: Text(state.name[0].toUpperCase() + state.name.substring(1)),
-                                selected: _state == state,
-                                onSelected: (_) => setState(() => _state = state),
-                              ),
-                          ],
+                        Segmented<OrbState>(
+                          segments: const {
+                            OrbState.idle: 'Idle',
+                            OrbState.listening: 'Listen',
+                            OrbState.thinking: 'Think',
+                            OrbState.speaking: 'Speak',
+                          },
+                          selected: _state,
+                          onChanged: (state) => setState(() => _state = state),
+                          expand: true,
                         ),
                         const SizedBox(height: 16),
-                        FilledButton(
+                        PillButton(
+                          label: 'Simulate a conversation',
+                          primary: true,
                           onPressed: _talking ? null : _converse,
-                          child: const Text('Simulate a conversation'),
                         ),
-                        const SizedBox(height: 16),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          alignment: WrapAlignment.center,
-                          children: [
-                            for (final name in _palettes.keys)
-                              ChoiceChip(
-                                label: Text(name),
-                                selected: _palette == name,
-                                onSelected: (_) => setState(() => _palette = name),
-                              ),
-                          ],
+                        const SizedBox(height: 20),
+                        Swatches(
+                          swatches: _swatches,
+                          selected: _palette,
+                          onChanged: (name) => setState(() => _palette = name),
                         ),
+                        const SizedBox(height: 8),
+                        Text(_palette, style: text.bodySmall?.copyWith(color: _muted)),
                       ],
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    'MIT © 2026 Yagnik Barasiya · respects reduced motion',
-                    style: text.bodySmall?.copyWith(color: _muted),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      'MIT © 2026 Yagnik Barasiya · respects reduced motion',
+                      style: text.bodySmall?.copyWith(color: _muted),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ],
               ),

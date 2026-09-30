@@ -1,0 +1,27 @@
+name: orb_voice_visualizer
+description: "A voice agent orb for Flutter: a shader-drawn sphere that idles, listens, thinks and speaks, moved by the audio level you pass in."
+version: 1.0.0
+homepage: https://yagnikbarasiya23.github.io/orb_voice_visualizer/
+repository: https://github.com/YagnikBarasiya23/orb_voice_visualizer
+issue_tracker: https://github.com/YagnikBarasiya23/orb_voice_visualizer/issues
+topics: [voice, ai, animation, shader, widget]
+screenshots:
+  - description: "Orb in the speaking state in the demo app"
+    path: screenshots/orb_voice_visualizer.jpg
+
+environment:
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  shaders:
+    - shaders/orb.frag

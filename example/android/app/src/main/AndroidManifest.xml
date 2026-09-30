@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="orb_voice_visualizer_example"
+        android:label="Orb"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
